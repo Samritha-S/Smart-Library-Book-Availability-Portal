@@ -28,7 +28,7 @@ export const SEED_PROFILES: Profile[] = [
     role: 'student',
     reg_no: 'AIT2023CS001',
     name: 'Aarav Sharma',
-    email: 'aarav.sharma@student.ait.edu',
+    email: 'samritha.25cse@sonatech.ac.in',
     department: 'Computer Science & Engineering',
     year: 3,
     user_type: 'undergraduate',
@@ -313,8 +313,8 @@ export async function requestStudentOtp(
     return genericResponse;
   }
 
-  // Generate 6-digit OTP
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  // Generate 6-digit OTP (fixed to 000000 for demo profiles)
+  const otp = isDemoMode ? '000000' : Math.floor(100000 + Math.random() * 900000).toString();
   activeDemoOtps.set(cleanRegNo, {
     otp,
     regNo: cleanRegNo,
@@ -378,8 +378,8 @@ export async function verifyStudentOtp(
   }
 
   const stored = activeDemoOtps.get(cleanRegNo);
-  // Also accept master test OTP '123456' in demo mode for frictionless testing
-  const isValidOtp = (stored && stored.otp === cleanOtp) || (isDemoMode && cleanOtp === '123456');
+  // Also accept master test OTP '000000' in demo mode for frictionless testing
+  const isValidOtp = (stored && stored.otp === cleanOtp) || (isDemoMode && cleanOtp === '000000');
 
   if (!isValidOtp) {
     if (stored) {

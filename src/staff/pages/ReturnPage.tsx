@@ -13,6 +13,7 @@ import {
 } from '../_local';
 import {
   return_copy,
+  mark_fine_paid,
   ReturnCopyResult,
 } from '../api';
 
@@ -33,6 +34,22 @@ export const ReturnPage: React.FC = () => {
   const [errorInfo, setErrorInfo] = useState<{ message: string; fix: string } | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [sessionList, setSessionList] = useState<ReturnedSessionItem[]>([]);
+  const [paidLoanIds, setPaidLoanIds] = useState<Set<string>>(new Set());
+  const [isPayingFine, setIsPayingFine] = useState(false);
+
+  const handleMarkPaid = async (loanId: string, amount: number) => {
+    setIsPayingFine(true);
+    try {
+      await mark_fine_paid(loanId, amount);
+      setPaidLoanIds((prev) => new Set(prev).add(loanId));
+      setToastMessage(`Fine ₹${amount} marked as paid successfully at desk.`);
+      setTimeout(() => setToastMessage(null), 4000);
+    } catch (err: unknown) {
+      console.warn('Mark fine paid error:', err);
+    } finally {
+      setIsPayingFine(false);
+    }
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -266,12 +283,30 @@ export const ReturnPage: React.FC = () => {
                 <span className="text-[#042f2e]/70">Fine due:</span>
                 <span
                   className={`font-bold num-tabular ${
-                    lastReturned.fine_amount > 0 ? 'text-[#b91c1c]' : 'text-[#0f766e]'
+                    paidLoanIds.has(lastReturned.loan_id)
+                      ? 'text-[#0f766e]'
+                      : lastReturned.fine_amount > 0
+                      ? 'text-[#b91c1c]'
+                      : 'text-[#0f766e]'
                   }`}
                 >
-                  ₹{lastReturned.fine_amount}
+                  {paidLoanIds.has(lastReturned.loan_id) ? 'Paid (₹0.00)' : `₹${lastReturned.fine_amount}`}
                 </span>
               </div>
+              {lastReturned.fine_amount > 0 && (
+                <div className="pt-2">
+                  <Button
+                    size="sm"
+                    variant={paidLoanIds.has(lastReturned.loan_id) ? 'secondary' : 'primary'}
+                    disabled={paidLoanIds.has(lastReturned.loan_id) || isPayingFine}
+                    isLoading={isPayingFine}
+                    onClick={() => handleMarkPaid(lastReturned.loan_id, lastReturned.fine_amount)}
+                    className="w-full text-xs h-7"
+                  >
+                    {paidLoanIds.has(lastReturned.loan_id) ? '✓ Paid at desk' : `Mark fine ₹${lastReturned.fine_amount} paid`}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

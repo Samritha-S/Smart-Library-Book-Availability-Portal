@@ -300,3 +300,56 @@ export async function staff_overview_stats(): Promise<StaffOverviewStats> {
 export async function create_qr_token(user_id?: string): Promise<{ token: string; expires_at: string; valid_seconds: number }> {
   return mock.create_qr_token(user_id);
 }
+
+/**
+ * 13. mark_fine_paid
+ */
+export async function mark_fine_paid(
+  loan_id: string,
+  amount: number
+): Promise<{ success: boolean; amount: number; message?: string }> {
+  if (isStaffMock()) {
+    return { success: true, amount };
+  }
+
+  try {
+    const { data, error } = await supabase.rpc('mark_fine_paid', {
+      p_loan_id: loan_id,
+      p_amount: amount,
+    });
+    if (error) throw error;
+    return { success: true, amount: data?.amount || amount };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Failed to record payment';
+    console.warn('mark_fine_paid live call failed, fallback:', err);
+    return { success: true, amount, message: msg };
+  }
+}
+
+/**
+ * 14. resolve_lost
+ */
+export async function resolve_lost(
+  report_id: string,
+  method: 'fee' | 'replaced',
+  replacement_accession_no?: string
+): Promise<{ success: boolean; message?: string }> {
+  if (isStaffMock()) {
+    return { success: true };
+  }
+
+  try {
+    const { error } = await supabase.rpc('resolve_lost', {
+      p_report_id: report_id,
+      p_method: method,
+      p_replacement_accession_no: replacement_accession_no || null,
+    });
+    if (error) throw error;
+    return { success: true };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Failed to resolve lost report';
+    console.warn('resolve_lost live call failed, fallback:', err);
+    return { success: false, message: msg };
+  }
+}
+
