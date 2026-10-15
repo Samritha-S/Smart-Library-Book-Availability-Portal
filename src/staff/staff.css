@@ -1,0 +1,88 @@
+/* Staff Desktop UI Styles & Design Tokens
+   Mapped strictly to DESIGN.md specifications
+*/
+
+:root {
+  --color-ink: #042f2e;
+  --color-brand: #0f766e;
+  --color-brand-light: #f0fdfa;
+  --color-accent: #f59e0b;
+  --color-accentink: #b45309;
+  --color-alert: #b91c1c;
+  --color-paper: #f7faf9;
+  --color-rule: #d6e2e0;
+}
+
+/* Palette utility bridges ensuring consistency across Tailwind */
+.bg-ink { background-color: #042f2e !important; }
+.text-ink { color: #042f2e !important; }
+.border-ink { border-color: #042f2e !important; }
+
+.bg-brand { background-color: #0f766e !important; }
+.text-brand { color: #0f766e !important; }
+.border-brand { border-color: #0f766e !important; }
+.hover\:bg-brand-dark:hover { background-color: #115e59 !important; }
+
+.bg-accent { background-color: #f59e0b !important; }
+.text-accent { color: #f59e0b !important; }
+.border-accent { border-color: #f59e0b !important; }
+
+.bg-accentink { background-color: #b45309 !important; }
+.text-accentink { color: #b45309 !important; }
+
+.bg-alert { background-color: #b91c1c !important; }
+.text-alert { color: #b91c1c !important; }
+.border-alert { border-color: #b91c1c !important; }
+
+.bg-paper { background-color: #f7faf9 !important; }
+.text-paper { color: #f7faf9 !important; }
+.border-paper { border-color: #f7faf9 !important; }
+
+.bg-rule { background-color: #d6e2e0 !important; }
+.border-rule { border-color: #d6e2e0 !important; }
+
+/* Editorial Typography */
+.font-editorial-title {
+  font-family: 'Newsreader', ui-serif, Georgia, Cambria, serif;
+  letter-spacing: -0.015em;
+}
+
+.font-staff-ui {
+  font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.num-tabular {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Row Flash Teal Animation */
+@keyframes flashTeal {
+  0% {
+    background-color: #ccfbf1;
+    border-color: #0f766e;
+  }
+  60% {
+    background-color: #f0fdfa;
+    border-color: #99f6e4;
+  }
+  100% {
+    background-color: transparent;
+    border-color: #d6e2e0;
+  }
+}
+
+.animate-flash-teal {
+  animation: flashTeal 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Shake Animation for failed barcode/accession scan */
+@keyframes shakeAction {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shakeAction 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}

@@ -1,45 +1,89 @@
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/geist';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    --ink: #042f2e;
+    --brand: #0f766e;
+    --accent: #f59e0b;
+    --accentink: #b45309;
+    --alert: #b91c1c;
+    --paper: #f7faf9;
+    --rule: #d6e2e0;
+    --grey: #64748b;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    /* Semantic mapping */
+    --background: #f7faf9;
+    --foreground: #042f2e;
+    --card: #ffffff;
+    --card-foreground: #042f2e;
+    --popover: #ffffff;
+    --popover-foreground: #042f2e;
+    --primary: #0f766e;
+    --primary-foreground: #ffffff;
+    --secondary: #e8eeed;
+    --secondary-foreground: #042f2e;
+    --muted: #e8eeed;
+    --muted-foreground: #64748b;
+    --destructive: #b91c1c;
+    --destructive-foreground: #ffffff;
+    --border: #d6e2e0;
+    --input: #d6e2e0;
+    --ring: #0f766e;
+    --radius: 6px;
+  }
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+  * {
+    border-color: #d6e2e0;
+    box-sizing: border-box;
+  }
 
-    /* Teal 600 / 700 */
-    --primary: 173 80% 32%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Warm Amber 500 / 600 */
-    --secondary: 38 92% 50%;
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215 16% 47%;
-
-    /* Warm Amber Accent */
-    --accent: 38 92% 50%;
-    --accent-foreground: 222 47% 11%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 173 80% 32%;
-
-    --radius: 0.625rem;
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-teal-100 selection:text-teal-900;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    background-color: #f7faf9;
+    color: #042f2e;
+    font-family: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Headings default to Newsreader */
+  h1, h2, h3, .font-heading, .font-book {
+    font-family: 'Newsreader Variable', 'Newsreader', ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* Tabular figures for counts, dates and fines */
+  .tabular-nums, .font-tabular, [data-tabular="true"] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* High contrast focus ring for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid #0f766e;
+    outline-offset: 2px;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

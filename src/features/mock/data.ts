@@ -1,0 +1,203 @@
+import type { LoanItem, HoldItem, ReturnedLoanItem, NotificationItem, LibraryHoliday } from './types';
+
+// Believable library holidays (mock list)
+export const INITIAL_HOLIDAYS: LibraryHoliday[] = [
+  { date: '2026-10-20', name: 'Library Maintenance & Inventory Day' },
+  { date: '2026-10-27', name: 'University Founder Day' },
+  { date: '2026-11-04', name: 'Mid-term Autumn Break' },
+  { date: '2026-11-12', name: 'Diwali Festival Holiday' },
+  { date: '2026-11-13', name: 'Diwali Govardhan Pooja' },
+];
+
+// 1. Loans: one due in 2 days, one due in 9, one 4 working days overdue with a fine
+export const INITIAL_LOANS: LoanItem[] = [
+  {
+    loan_id: 'loan-001',
+    title: 'Designing Data-Intensive Applications',
+    author: 'Martin Kleppmann',
+    edition_no: 1,
+    cover_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-01042',
+    issued_at: '2026-10-03T10:30:00.000Z',
+    due_date: '2026-10-17T17:00:00.000Z',
+    renewals_count: 0,
+    max_renewals: 2,
+    working_days_left: 2,
+    working_days_overdue: 0,
+    fine_amount: 0,
+    status: 'active',
+    has_hold_queue: false,
+  },
+  {
+    loan_id: 'loan-002',
+    title: 'Operating System Concepts',
+    author: 'Abraham Silberschatz, Peter B. Galvin, Greg Gagne',
+    edition_no: 10,
+    cover_url: 'https://images.unsplash.com/photo-1532012164546-f432f2e3777a?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00482',
+    issued_at: '2026-09-28T14:15:00.000Z',
+    due_date: '2026-10-26T17:00:00.000Z',
+    renewals_count: 1,
+    max_renewals: 2,
+    working_days_left: 9,
+    working_days_overdue: 0,
+    fine_amount: 0,
+    status: 'active',
+    has_hold_queue: false,
+  },
+  {
+    loan_id: 'loan-003',
+    title: 'Introduction to Algorithms',
+    author: 'Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein',
+    edition_no: 4,
+    cover_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00109',
+    issued_at: '2026-09-20T11:00:00.000Z',
+    due_date: '2026-10-09T17:00:00.000Z',
+    renewals_count: 2,
+    max_renewals: 2,
+    working_days_left: 0,
+    working_days_overdue: 4,
+    fine_amount: 40, // ₹10 per working day
+    status: 'overdue',
+    has_hold_queue: true, // Also someone is waiting!
+  },
+];
+
+// 2. Holds: one waiting at position 2, one ready with a 2-working-day pickup deadline
+export const INITIAL_HOLDS: HoldItem[] = [
+  {
+    hold_id: 'hold-101',
+    title: "Clean Architecture: A Craftsman's Guide",
+    author: 'Robert C. Martin',
+    cover_url: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&auto=format&fit=crop&q=80',
+    queue_position: 2,
+    status: 'waiting',
+    pickup_deadline: null,
+    created_at: '2026-10-12T09:20:00.000Z',
+  },
+  {
+    hold_id: 'hold-102',
+    title: 'Database System Concepts',
+    author: 'Avi Silberschatz, Henry F. Korth, S. Sudarshan',
+    cover_url: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&auto=format&fit=crop&q=80',
+    queue_position: 1,
+    status: 'ready',
+    pickup_deadline: '2026-10-17T17:00:00.000Z', // 2 working days countdown
+    created_at: '2026-10-08T15:45:00.000Z',
+  },
+];
+
+// 3. History: 6 returned books with date returned
+export const INITIAL_HISTORY: ReturnedLoanItem[] = [
+  {
+    loan_id: 'hist-001',
+    title: 'Computer Networks: A Systems Approach',
+    author: 'Larry L. Peterson, Bruce S. Davie',
+    edition_no: 6,
+    cover_url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00711',
+    issued_at: '2026-09-10T11:00:00.000Z',
+    returned_at: '2026-09-28T16:20:00.000Z',
+    status: 'returned',
+  },
+  {
+    loan_id: 'hist-002',
+    title: 'Artificial Intelligence: A Modern Approach',
+    author: 'Stuart Russell, Peter Norvig',
+    edition_no: 4,
+    cover_url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00233',
+    issued_at: '2026-08-30T10:15:00.000Z',
+    returned_at: '2026-09-14T14:40:00.000Z',
+    status: 'returned',
+  },
+  {
+    loan_id: 'hist-003',
+    title: 'Structure and Interpretation of Computer Programs',
+    author: 'Harold Abelson, Gerald Jay Sussman',
+    edition_no: 2,
+    cover_url: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00344',
+    issued_at: '2026-08-12T09:00:00.000Z',
+    returned_at: '2026-08-29T11:30:00.000Z',
+    status: 'returned',
+  },
+  {
+    loan_id: 'hist-004',
+    title: "Computer Systems: A Programmer's Perspective",
+    author: 'Randal E. Bryant, David R. O\'Hallaron',
+    edition_no: 3,
+    cover_url: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00892',
+    issued_at: '2026-07-25T14:00:00.000Z',
+    returned_at: '2026-08-10T17:10:00.000Z',
+    status: 'returned',
+  },
+  {
+    loan_id: 'hist-005',
+    title: 'Modern Operating Systems',
+    author: 'Andrew S. Tanenbaum, Herbert Bos',
+    edition_no: 5,
+    cover_url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00650',
+    issued_at: '2026-07-05T13:45:00.000Z',
+    returned_at: '2026-07-22T12:00:00.000Z',
+    status: 'returned',
+  },
+  {
+    loan_id: 'hist-006',
+    title: 'Compilers: Principles, Techniques, and Tools',
+    author: 'Alfred V. Aho, Monica S. Lam, Ravi Sethi, Jeffrey D. Ullman',
+    edition_no: 2,
+    cover_url: 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=400&auto=format&fit=crop&q=80',
+    accession_no: 'ACC-00155',
+    issued_at: '2026-05-28T10:00:00.000Z',
+    returned_at: '2026-06-15T16:00:00.000Z',
+    status: 'returned',
+  },
+];
+
+// 4. Notifications: 4 notifications (hold ready, due soon, overdue notice)
+export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
+  {
+    id: 'notif-001',
+    type: 'hold_ready',
+    title: 'Hold ready for pickup',
+    message: 'Database System Concepts is held for you at the front desk. Pickup deadline: Oct 17, 5:00 PM.',
+    created_at: '2026-10-15T08:30:00.000Z',
+    read: false,
+    link_tab: 'holds',
+    related_id: 'hold-102',
+  },
+  {
+    id: 'notif-002',
+    type: 'due_soon',
+    title: 'Loan due in 2 working days',
+    message: 'Designing Data-Intensive Applications is due on Oct 17. Renew now or schedule a return date.',
+    created_at: '2026-10-14T09:00:00.000Z',
+    read: false,
+    link_tab: 'borrowed',
+    related_id: 'loan-001',
+  },
+  {
+    id: 'notif-003',
+    type: 'overdue_notice',
+    title: 'Overdue loan notice',
+    message: 'Introduction to Algorithms is 4 working days overdue. Current fine accumulated: ₹40. Fines halt upon return or lost report.',
+    created_at: '2026-10-13T10:00:00.000Z',
+    read: false,
+    link_tab: 'borrowed',
+    related_id: 'loan-003',
+  },
+  {
+    id: 'notif-004',
+    type: 'due_soon',
+    title: 'Loan due in 9 days',
+    message: 'Operating System Concepts is due on Oct 26. You have 1 renewal remaining.',
+    created_at: '2026-10-11T12:00:00.000Z',
+    read: true,
+    link_tab: 'borrowed',
+    related_id: 'loan-002',
+  },
+];
