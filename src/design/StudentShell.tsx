@@ -1,5 +1,11 @@
 import React from 'react';
-import { BookOpen, Search, BookCheck, History, User } from 'lucide-react';
+import { Home, BookOpen, Search, BookCheck, User } from 'lucide-react';
+
+export interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+}
 
 export interface StudentShellProps {
   children: React.ReactNode;
@@ -9,30 +15,27 @@ export interface StudentShellProps {
   userRegNo?: string;
   libraryName?: string;
   actions?: React.ReactNode;
+  navItems?: NavItem[];
 }
 
-interface NavItem {
-  id: string;
-  label: string;
-  icon: React.ElementType;
-}
-
-const NAV_ITEMS: NavItem[] = [
+const DEFAULT_NAV_ITEMS: NavItem[] = [
+  { id: 'home', label: 'Home', icon: Home },
   { id: 'search', label: 'Catalog', icon: Search },
   { id: 'loans', label: 'My books', icon: BookCheck },
-  { id: 'history', label: 'History', icon: History },
   { id: 'profile', label: 'Account', icon: User },
 ];
 
 export const StudentShell: React.FC<StudentShellProps> = ({
   children,
-  activeTab = 'search',
+  activeTab = 'home',
   onTabChange,
   userName = 'Student',
   userRegNo,
   libraryName = 'Central Library',
   actions,
+  navItems = DEFAULT_NAV_ITEMS,
 }) => {
+  const currentNav = navItems;
   return (
     <div className="min-h-screen bg-paper text-ink flex flex-col md:flex-row antialiased">
       {/* ------------------------------------------------------------- */}
@@ -46,7 +49,7 @@ export const StudentShell: React.FC<StudentShellProps> = ({
 
         {/* Rail Navigation Links */}
         <nav className="flex-1 flex flex-col gap-2 w-full px-2" aria-label="Main Navigation">
-          {NAV_ITEMS.map((item) => {
+          {currentNav.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (
@@ -139,7 +142,7 @@ export const StudentShell: React.FC<StudentShellProps> = ({
         className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-white border-t border-rule flex items-center justify-around px-2 z-30 select-none shadow-sheet"
         aria-label="Mobile Navigation"
       >
-        {NAV_ITEMS.map((item) => {
+        {currentNav.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
           return (

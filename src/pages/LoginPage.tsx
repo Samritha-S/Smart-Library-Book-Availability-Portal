@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { isDemoMode, SEED_PROFILES, SEED_LIBRARY } from '@/lib/supabase';
 import { Button } from '@/design/Button';
@@ -21,6 +22,17 @@ import {
 
 export const LoginPage: React.FC = () => {
   const { user, requestOtp, loginStudent, loginStaff, logout, switchDemoUser } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'student') {
+        navigate('/', { replace: true });
+      } else {
+        navigate('/staff', { replace: true });
+      }
+    }
+  }, [user, navigate]);
 
   // Student login states
   const [regNo, setRegNo] = useState('');
@@ -88,6 +100,8 @@ export const LoginPage: React.FC = () => {
       const response = await loginStudent(regNo.trim(), otpValue.trim());
       if (!response.success) {
         setErrorMessage(response.error || 'Invalid verification code.');
+      } else {
+        navigate('/', { replace: true });
       }
     } catch {
       setErrorMessage('Failed to verify code. Please try again.');
@@ -111,6 +125,8 @@ export const LoginPage: React.FC = () => {
       const response = await loginStaff(staffEmail.trim());
       if (!response.success) {
         setErrorMessage(response.error || 'Authentication failed.');
+      } else {
+        navigate('/staff', { replace: true });
       }
     } catch {
       setErrorMessage('Failed to sign in. Please try again.');

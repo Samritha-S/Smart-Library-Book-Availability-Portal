@@ -5,7 +5,6 @@ import { LoanRow } from './loans/LoanRow';
 import { LoanDetailCard } from './loans/LoanDetailCard';
 import { HoldRow } from './holds/HoldRow';
 import { HistoryList } from './loans/HistoryList';
-import { NotificationBell } from './notifications/NotificationBell';
 import { EmptyState, Button, Toaster } from './_local';
 import { BookOpen, Bookmark, RotateCcw, Search } from 'lucide-react';
 
@@ -60,107 +59,103 @@ export const MyBooksView: React.FC<MyBooksViewProps> = ({
   const historyCount = history.length;
 
   return (
-    <div className={`min-h-screen bg-paper text-ink font-sans ${className}`}>
+    <div className={`space-y-6 ${className}`}>
       {/* Toast container */}
       <Toaster />
 
-      {/* Top Bar / Header */}
-      <header className="border-b border-rule bg-white sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-          <div>
-            <h1 className="font-serif text-xl sm:text-2xl font-bold text-ink leading-tight">
-              My books
-            </h1>
-            <p className="text-xs text-grey font-sans mt-0.5">
-              Circulation loans, reserve holds, and reading history
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => mockStorage.reset()}
-              leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
-              title="Reset mock data to initial believable state"
-              className="text-grey hover:text-ink hidden sm:inline-flex"
-            >
-              Reset mock
-            </Button>
-
-            <NotificationBell onNavigateTab={(tab) => setActiveTab(tab)} />
-          </div>
+      {/* Page Title & Controls */}
+      <div className="flex items-center justify-between pb-2 border-b border-rule">
+        <div>
+          <h1 className="font-serif text-2xl font-bold text-ink tracking-tight">
+            My books
+          </h1>
+          <p className="text-xs text-grey font-sans mt-0.5">
+            Circulation loans, reserve holds, and reading history
+          </p>
         </div>
 
-        {/* Tab Navigation (Mobile-first, sentence-case, tabular figures) */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 border-t border-rule/60 overflow-x-auto scrollbar-none">
-          <button
-            type="button"
-            onClick={() => setActiveTab('borrowed')}
-            className={`py-3 px-3.5 border-b-2 text-xs font-medium transition-colors flex items-center gap-2 shrink-0 select-none ${
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => mockStorage.reset()}
+            leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
+            title="Reset mock data to initial believable state"
+            className="text-grey hover:text-ink text-xs h-7"
+          >
+            Reset mock
+          </Button>
+        </div>
+      </div>
+
+      {/* Tab Navigation (Mobile-first, sentence-case, tabular figures) */}
+      <div className="flex items-center gap-1 border-b border-rule overflow-x-auto scrollbar-none select-none">
+        <button
+          type="button"
+          onClick={() => setActiveTab('borrowed')}
+          className={`py-2.5 px-3.5 border-b-2 text-xs font-medium transition-colors flex items-center gap-2 shrink-0 select-none cursor-pointer ${
+            activeTab === 'borrowed'
+              ? 'border-brand text-brand font-semibold'
+              : 'border-transparent text-grey hover:text-ink'
+          }`}
+        >
+          <span>Borrowed</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[11px] font-tabular ${
               activeTab === 'borrowed'
-                ? 'border-brand text-brand font-semibold'
-                : 'border-transparent text-grey hover:text-ink'
+                ? 'bg-brand/10 text-brand font-semibold'
+                : 'bg-paper text-grey'
             }`}
           >
-            <span>Borrowed</span>
-            <span
-              className={`px-1.5 py-0.2 rounded-full text-[11px] font-tabular ${
-                activeTab === 'borrowed'
-                  ? 'bg-brand/10 text-brand'
-                  : 'bg-paper text-grey'
-              }`}
-            >
-              {borrowedCount}
-            </span>
-          </button>
+            {borrowedCount}
+          </span>
+        </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('holds')}
-            className={`py-3 px-3.5 border-b-2 text-xs font-medium transition-colors flex items-center gap-2 shrink-0 select-none ${
+        <button
+          type="button"
+          onClick={() => setActiveTab('holds')}
+          className={`py-2.5 px-3.5 border-b-2 text-xs font-medium transition-colors flex items-center gap-2 shrink-0 select-none cursor-pointer ${
+            activeTab === 'holds'
+              ? 'border-brand text-brand font-semibold'
+              : 'border-transparent text-grey hover:text-ink'
+          }`}
+        >
+          <span>Holds</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[11px] font-tabular ${
               activeTab === 'holds'
-                ? 'border-brand text-brand font-semibold'
-                : 'border-transparent text-grey hover:text-ink'
+                ? 'bg-brand/10 text-brand font-semibold'
+                : 'bg-paper text-grey'
             }`}
           >
-            <span>Holds</span>
-            <span
-              className={`px-1.5 py-0.2 rounded-full text-[11px] font-tabular ${
-                activeTab === 'holds'
-                  ? 'bg-brand/10 text-brand'
-                  : 'bg-paper text-grey'
-              }`}
-            >
-              {holdsCount}
-            </span>
-          </button>
+            {holdsCount}
+          </span>
+        </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('history')}
-            className={`py-3 px-3.5 border-b-2 text-xs font-medium transition-colors flex items-center gap-2 shrink-0 select-none ${
+        <button
+          type="button"
+          onClick={() => setActiveTab('history')}
+          className={`py-2.5 px-3.5 border-b-2 text-xs font-medium transition-colors flex items-center gap-2 shrink-0 select-none cursor-pointer ${
+            activeTab === 'history'
+              ? 'border-brand text-brand font-semibold'
+              : 'border-transparent text-grey hover:text-ink'
+          }`}
+        >
+          <span>History</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[11px] font-tabular ${
               activeTab === 'history'
-                ? 'border-brand text-brand font-semibold'
-                : 'border-transparent text-grey hover:text-ink'
+                ? 'bg-brand/10 text-brand font-semibold'
+                : 'bg-paper text-grey'
             }`}
           >
-            <span>History</span>
-            <span
-              className={`px-1.5 py-0.2 rounded-full text-[11px] font-tabular ${
-                activeTab === 'history'
-                  ? 'bg-brand/10 text-brand'
-                  : 'bg-paper text-grey'
-              }`}
-            >
-              {historyCount}
-            </span>
-          </button>
-        </div>
-      </header>
+            {historyCount}
+          </span>
+        </button>
+      </div>
 
-      {/* Main Content Area: Responsive Mobile-first (360px) to Desktop (1024px+) */}
-      <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      {/* Main Content Area */}
+      <div>
         {activeTab === 'borrowed' && (
           <div>
             {loans.length === 0 ? (
@@ -262,7 +257,7 @@ export const MyBooksView: React.FC<MyBooksViewProps> = ({
             <HistoryList history={history} onExplore={onSearchClick} />
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };
