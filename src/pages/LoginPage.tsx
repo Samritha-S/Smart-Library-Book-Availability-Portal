@@ -250,7 +250,7 @@ export const LoginPage: React.FC = () => {
           </div>
 
           {/* Quick profile switch for review */}
-          {isDemoMode && (
+          {(
             <div className="mt-4 p-4 rounded-[6px] bg-white border border-accent/40 text-xs text-ink space-y-2">
               <span className="font-semibold text-accentink flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-accent" strokeWidth={1.75} />
@@ -438,8 +438,8 @@ export const LoginPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Demo Mode helper code display */}
-                    {isDemoMode && demoOtpCode && (
+                    {/* Demo mode helper code display */}
+                    {demoOtpCode && (
                       <div className="p-3 rounded-[6px] bg-[#fffbeb] border border-accent/40 text-xs text-accentink space-y-1">
                         <div className="flex items-center gap-1.5 font-semibold">
                           <Sparkles className="w-3.5 h-3.5 text-accent" strokeWidth={1.75} />
@@ -556,8 +556,8 @@ export const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Demo mode quick picker */}
-          {isDemoMode && (
+          {/* Demo quick picker — always visible for portal demos */}
+          {(
             <div className="mt-4 p-4 rounded-[6px] bg-white border border-accent/40 text-xs text-ink space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-accentink flex items-center gap-1.5">
